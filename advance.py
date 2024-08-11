@@ -98,10 +98,12 @@ while True:
                     for i in range(90,180):
                         fanangle = i
                         rotateservo(i)
+                    sleep(1.5)
                 if fanangle == 1:
                     for i in range(0,180):
                         fanangle = i
                         rotateservo(i)
+                    sleep(1.5)
 
         if ir2[0] == 0 and rotl == False:
             board.digital_write(ledpin, 1)
@@ -111,10 +113,12 @@ while True:
                     for i in range(90)[:0:-1]:
                         fanangle = i
                         rotateservo(i)            
+                    sleep(1.5)
                 if fanangle == 179:
                     for i in range(180)[:0:-1]:
                         fanangle = i
-                        rotateservo(i)             
+                        rotateservo(i)        
+                    sleep(1.5)     
 
         # print("ir1", ir1[0], "ir2", ir2[0])
         if ir1[0] == 1 and rotr == True:
@@ -122,7 +126,7 @@ while True:
         if ir2[0] == 1 and rotl == True:
             rotl = False
         
-        if distance >=20 and rotr == False and rotl == False:
+        if distance >= 20 and rotr == False and rotl == False:
             sonardetectcount = 0
             board.digital_write(ledpin, 2)
 
@@ -133,14 +137,75 @@ while True:
                 if fanangle == 1:
                     for i in range(0,91):
                         fanangle = i
-                        rotateservo(i)                
+                        rotateservo(i)             
+                    sleep(1.5)   
                 if fanangle == 179:
                     for i in range(180)[:89:-1]:
                         fanangle = i
-                        rotateservo(i)                
+                        rotateservo(i)             
+                    sleep(1.5)   
                 sonardetectcount = 0
         # board.sonar_read(trigpin)
 
+        if ir1[0] == 0 and ir2[0] == 0:
+            board.digital_write(ledpin, 1)
+            rotr = True
+            rotl = True            
+            if fanangle == 1:
+                for i in range(0,180):
+                    fanangle = i
+                    rotateservo(i)    
+                sleep(1.5)                            
+            if fanangle == 179:
+                for i in range(180)[:0:-1]:
+                    fanangle = i
+                    rotateservo(i)
+                sleep(1.5)
+
+        if ir1[0] == 0 and ir2[0] == 1 and distance < 20:
+            sonardetectcount += 1
+            if sonardetectcount == 3:
+                board.digital_write(ledpin, 1)
+                rotr = True
+                if fanangle == 90:
+                    for i in range(90,180):
+                        fanangle = i
+                        rotateservo(i)     
+                    sleep(1.5)         
+                if fanangle == 179:
+                    for i in range(180)[:89:-1]:
+                        fanangle = i
+                        rotateservo(i)        
+                    sleep(1.5)      
+                sonardetectcount = 0            
+
+        if ir1[0] == 1 and ir2[0] == 0 and distance < 20:
+            sonardetectcount += 1
+            if sonardetectcount == 3:
+                board.digital_write(ledpin, 1)
+                rotl = True
+                if fanangle == 90:
+                    for i in range(90)[:0:-1]:
+                        fanangle = i
+                        rotateservo(i)    
+                    sleep(1.5)         
+                if fanangle == 1:
+                    for i in range(0,91):
+                        fanangle = i
+                        rotateservo(i)        
+                    sleep(1.5)      
+                sonardetectcount = 0     
+
+        if distance >= 20 and rotr == True:
+            sonardetectcount += 1
+            if sonardetectcount == 3:            
+                rotr = False
+                sonardetectcount = 0 
+        if distance >= 20 and rotl == True:
+            sonardetectcount += 1
+            if sonardetectcount == 3:            
+                rotl = False
+                sonardetectcount = 0   
         # x=input("input : ")
         # if x=="1":
         #     for i in range(90,180):
